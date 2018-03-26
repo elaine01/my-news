@@ -36,19 +36,25 @@ mongoose.connect("mongodb://localhost/mynews_db", {
 
 // Scrape new articles and save to database
 app.get('/scrape', function(req, res) {
-	axios.get('https://hackernoon.com').then(function(res) {
+	axios.get('https://news.crunchbase.com/news/').then(function(res) {
 		var $ = cheerio.load(res.data);
 
-		$('.u-textScreenReader').each(function(i, element) {
+		$('.ebr-title').each(function(i, element) {
 
 			// save empty result object to store articles
 			const result = {};
 
 			result.title = $(this)
+				.find('h2')
 				.text();
 			result.link = $(this)
-				.parent('a')
+				.children('a')
 				.attr('href')
+			result.summary = $(this)
+				.children('p')
+				.test();
+			// result.date = $(this)		
+			// result.image = $(this)
 
 			// create new article using result object
 			db.Article
@@ -92,7 +98,7 @@ app.post('/articles/:id', function(req, res) {
 });
 
 // Delete comment from article
-app.post('delete/:id', function(req, res) {
+app.get('delete/:id', function(req, res) {
 	db.Note
 		.remove( {_id: req.params.id} )
 		.then(function(dbNote) {
