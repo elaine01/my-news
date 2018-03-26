@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const exphbs = require('express-handlebars');
-
 const axios = require('axios');
 const cheerio = require('cheerio');
 
@@ -33,7 +32,6 @@ mongoose.connect("mongodb://localhost/mynews_db", {
 });
 
 // { Routes }
-
 // Scrape new articles and save to database
 app.get('/scrape', function(req, res) {
 	axios.get('https://news.crunchbase.com/news/').then(function(response) {
@@ -116,7 +114,6 @@ app.post('/saved/:id', function(req, res) {
 		res.redirect('/');
 });
 
-
 // Get comments from an article in the database
 app.get('/articles/:id', function(req, res) {
 	db.Article
@@ -172,7 +169,6 @@ app.post('/delete/comment/:id', function(req, res) {
 		});
 		res.redirect('/saved')
 });
-
 
 // Start server
 app.listen(PORT, function() {
