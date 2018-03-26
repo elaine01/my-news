@@ -1,0 +1,51 @@
+<div id="articles">
+  {{#each saved}}
+    <div class="well">
+      <div class="row">
+        <div class="col col-md-12">
+          <h3><a href="{{this.link}}">{{this.title}}</a></h3> <br>
+          <p> {{this.summary}} </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-xs-3 col-sm-2">
+          <form class="form-inline" action="/delete/article/{{this.id}}?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-warning" data-id={{this.id}}>Unsave</button>
+          </form>
+        </div>
+        <div class="col col-xs-3 col-sm-2">
+          <a class="btn btn-primary" role="button" data-toggle="collapse" href="#collapseExample-{{this.id}}" aria-expanded="false" aria-controls="collapseExample">
+            Comment
+          </a>
+        </div>
+        <div class="col col-cs-6 col-sm-8">
+        </div>
+        <div class="col-xs-12">
+          <div class="collapse" id="collapseExample-{{this.id}}">
+            <br>
+            {{#if article.note}}
+              <div class="well">
+                <ul class="list-group">
+                  {{#each article.note}}
+                    <li class="list-group-item">{{this.comment}}
+                      <button type="button" class="close delete" aria-label="Close" delete-comment-id="{{this._id}}">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </li>
+                  {{/each}}
+                </ul>
+              </div>
+            {{/if}}
+            <form action="/article/comment/{{this.id}}" method="post">
+              <div class="form-group">
+                <label for="comment-textarea">Comment</label>
+                <textarea name="" id="comment-textarea-{{this._id}}" class="form-control"></textarea>
+              </div>
+              <button type="submit" class="btn btn-light submit-comment" data-article-id="{{this._id}}">Submit Comment</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>

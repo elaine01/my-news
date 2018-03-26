@@ -55,7 +55,6 @@ app.get('/scrape', function(req, res) {
 				.text();
 			// result.date = $(this)		
 			// result.image = $(this)
-
 			// create new article using result object
 			db.Article
 				.create(result)
@@ -66,19 +65,19 @@ app.get('/scrape', function(req, res) {
 					res.json(err);
 				});
 		});
-		res.redirect('/articles');
+		res.redirect('/');
 	});
 });
 
 // Redirect index
-app.get('/', function(req, res) {
-	res.redirect('/articles')
-});
+// app.get('/', function(req, res) {
+// 	res.redirect('/articles')
+// });
 
 // Get all articles from database (and comments)
-app.get('/articles', function(req, res) {
+app.get('/', function(req, res) {
 	db.Article
-		.find({})
+		.find({ saved: false })
 		//.populate('notes')
 		.then(function(dbArticles) {
 			//res.json(dbArticles);
@@ -89,11 +88,40 @@ app.get('/articles', function(req, res) {
 		});
 });
 
-// Get an article from database (and comments)
+// Get all saved articles
+app.get('/saved', function(req, res) {
+	db.Article
+		.find({ saved: true })
+		//.populate('notes')
+		.then(function(dbArticles) {
+			//res.json(dbArticles);
+			res.render('saved', {saved: dbArticles})
+		})
+		.catch(function(err) {
+			res.json(err);
+		});
+});
+
+// Save article
+app.post('/saved/:id', function(req, res) {
+	db.Article
+		.update( {_id: req.params.id}, {$set: {saved: true}})
+		//.populate('notes')
+		.then(function(dbArticle) {
+			res.json(dbArticle);
+		})
+		.catch(function(err) {
+			res.json(err);
+		});
+		res.redirect('/');
+});
+
+
+// Get comments from an article in the database
 app.get('/articles/:id', function(req, res) {
 	db.Article
 		.findOne( {_id: req.params.id})
-		//.populate('notes')
+		.populate('notes')
 		.then(function(dbArticle) {
 			res.json(dbArticle);
 		})
@@ -102,8 +130,22 @@ app.get('/articles/:id', function(req, res) {
 		});
 });
 
+// Delete article from saved
+app.post('/delete/article/:id', function(req, res) {
+	db.Article
+		.update( {_id: req.params.id}, {$set: {saved: false}} )
+		//.populate('notes')
+		.then(function(dbArticle) {
+			res.json(dbArticle);
+		})
+		.catch(function(err) {
+			res.json(err);
+		});
+		res.redirect('/saved')
+});
+
 // Create comment on an article
-app.post('/articles/:id', function(req, res) {
+app.post('/article/comment/:id', function(req, res) {
 	db.Note
 		.create(req.body)
 		.then(function(dbNote) {
@@ -115,10 +157,11 @@ app.post('/articles/:id', function(req, res) {
 		.catch(function(err) {
 			res.json(err);
 		});
+		res.redirect('/saved')
 });
 
 // Delete comment from article
-app.get('delete/:id', function(req, res) {
+app.post('/delete/comment/:id', function(req, res) {
 	db.Note
 		.remove( {_id: req.params.id} )
 		.then(function(dbNote) {
@@ -127,6 +170,7 @@ app.get('delete/:id', function(req, res) {
 		.catch(function(err) {
 			res.json(err);
 		});
+		res.redirect('/saved')
 });
 
 
