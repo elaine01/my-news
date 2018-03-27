@@ -4,7 +4,7 @@ MyNews is a news-scraping app where a user can scrape for latest articles on a s
 
 
 ## Demo
-App is deployed on Heroku [here]().
+App is deployed on Heroku [here](https://my-news-now.herokuapp.com/).
 
 
 ## Installation
