@@ -32,6 +32,7 @@ mongoose.connect("mongodb://localhost/mynews_db", {
 });
 
 // { Routes }
+
 // Scrape new articles and save to database
 app.get('/scrape', function(req, res) {
 	axios.get('https://news.crunchbase.com/news/').then(function(response) {
