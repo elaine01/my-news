@@ -121,6 +121,7 @@ app.get('/articles/:id', function(req, res) {
 		.findOne( {_id: req.params.id})
 		.populate('notes')
 		.then(function(dbArticle) {
+			console.log("dbArticle ", dbArticle);
 			res.json(dbArticle);
 		})
 		.catch(function(err) {
@@ -144,18 +145,22 @@ app.post('/delete/article/:id', function(req, res) {
 
 // Create comment on an article
 app.post('/article/comment/:id', function(req, res) {
+	console.log("req.body ", req.body);
 	db.Note
 		.create(req.body)
 		.then(function(dbNote) {
-			return db.Article.findOneAndUpdate({_id: req.params.id}, { $push: {note: dbNote._id}}, { new: true });
+			console.log("dbNote" , dbNote);
+			console.log("req.params.id ", req.params.id);
+			return db.Article.findOneAndUpdate({_id: req.params.id}, { $push: {notes: dbNote._id}}, { new: true });
 		})
 		.then(function(dbArticle) {
+			console.log("hello i'm within create post");
 			res.json(dbArticle);
 		})
 		.catch(function(err) {
 			res.json(err);
 		});
-		res.redirect('/saved')
+		// res.redirect('/saved')
 });
 
 // Delete comment from article
