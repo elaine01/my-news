@@ -9,7 +9,7 @@ const cheerio = require('cheerio');
 // Require all models
 const db = require('./models');
 
-const PORT = 3000;
+const PORT = 8080;
 
 // Initialize Express
 const app = express();
@@ -94,7 +94,7 @@ app.get('/saved', function(req, res) {
 		//.populate('notes')
 		.then(function(dbArticles) {
 			//res.json(dbArticles);
-			res.render('saved', {saved: dbArticles})
+			res.render('saved', {saved: dbArticles, comments: dbArticles.notes })
 		})
 		.catch(function(err) {
 			res.json(err);
@@ -133,7 +133,7 @@ app.get('/articles/:id', function(req, res) {
 app.post('/delete/article/:id', function(req, res) {
 	db.Article
 		.update( {_id: req.params.id}, {$set: {saved: false}} )
-		//.populate('notes')
+		.populate('notes')
 		.then(function(dbArticle) {
 			res.json(dbArticle);
 		})
@@ -149,12 +149,12 @@ app.post('/article/comment/:id', function(req, res) {
 	db.Note
 		.create(req.body)
 		.then(function(dbNote) {
-			console.log("dbNote" , dbNote);
-			console.log("req.params.id ", req.params.id);
+			// console.log("dbNote" , dbNote);
+			// console.log("req.params.id ", req.params.id);
 			return db.Article.findOneAndUpdate({_id: req.params.id}, { $push: {notes: dbNote._id}}, { new: true });
 		})
 		.then(function(dbArticle) {
-			console.log("hello i'm within create post");
+			// console.log("hello i'm within create post");
 			res.json(dbArticle);
 		})
 		.catch(function(err) {

@@ -23,12 +23,12 @@
         <div class="col-xs-12">
           <div class="collapse" id="collapseExample-{{this.id}}">
             <br>
-            {{#if article.comment}}
+            {{#if article}}
               <div class="well">
                 <ul class="list-group">
-                  {{#each article.comment}}
-                    <li class="list-group-item">{{this.comment}}
-                      <button type="button" class="close delete" aria-label="Close" delete-comment-id="{{this.id}}">
+                  {{#each this.notes}}
+                    <li class="list-group-item">{{this.summary}} test
+                      <button type="button" class="close delete comment-delete-btn" aria-label="Close" data-comment-id="{{this.id}}">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </li>
@@ -38,7 +38,7 @@
             {{/if}}
             <form action="/article/comment/{{this.id}}" method="post">
               <div class="form-group">
-                <label for="comment-textarea">Comment</label>
+                <label for="comment-text area">Comment</label>
                 <textarea name="" id="comment-textarea-{{this.id}}" class="form-control comment-text"></textarea>
               </div>
               <button type="submit" class="btn btn-light submit-comment" data-article-id="{{this.id}}">Submit Comment</button>

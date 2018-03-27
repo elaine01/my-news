@@ -1,17 +1,19 @@
-$('.submit-comment').on('submit', function(e) {
+$('.submit-comment').on('click', function(e) {
 
 	e.preventDefault();
 
-	let thisID = $(this).attr('data-id');
+	let thisID = $(this).attr('data-article-id');
 
-	console.log("thisID ", thisID);
+	const comment = $('.comment-text').val();
 
-	// Run a post request, using what's entered in the comment section
+	// console.log(thisID)
+
+	// Run a post request, using what's entered in the comconsole.log(ment section
 	$.ajax({
 		method: 'POST',
 		url: '/article/comment/' + thisID,
 		data: {
-			comment: $('.comment-text').val()
+			comment
 		}
 	})
 	.done(function(data) {
@@ -21,4 +23,17 @@ $('.submit-comment').on('submit', function(e) {
 	})
 	// $('.comment-text').val('');
 
+});
+
+
+$('.comment-delete-btn').on('click', function(e) {
+
+	e.preventDefault();
+
+	let thisID = $(this).attr('data-comment-id');
+
+	$.ajax({
+		method: 'POST',
+		url: '/delete/comment/:id' + thisID
+	})
 });
